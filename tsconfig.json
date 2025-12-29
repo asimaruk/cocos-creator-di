@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "strict": true,
     "module": "commonjs",
     "lib": [ "es2015", "es2017", "dom", "es6" ],
     "target": "es5",
@@ -7,6 +8,7 @@
     "skipLibCheck": true,
     "outDir": "temp/vscode-dist",
     "forceConsistentCasingInFileNames": true,
+    "noUncheckedIndexedAccess": true
   },
   "exclude": [
     "node_modules",

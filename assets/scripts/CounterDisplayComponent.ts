@@ -1,4 +1,4 @@
-import { DEPS, injectable, provide } from "./di/di";
+import { DEPS, inject, injectable } from "./di/di";
 import CounterRepository from "./repository/CounterRepository";
 
 const {
@@ -15,7 +15,7 @@ export default class CounterDisplayComponent extends cc.Component {
     private label: cc.Label = null!;
 
     constructor(
-        private counterRepository: CounterRepository = provide(DEPS.CounterRepository),
+        @inject(DEPS.CounterRepository) private counterRepository: CounterRepository,
     ) {
         super();
     }

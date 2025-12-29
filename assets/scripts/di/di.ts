@@ -1,10 +1,26 @@
 import DefaultCounterRepository from "../repository/DefaultCounterRepository";
 import CounterRepository from "../repository/CounterRepository";
 
+type DefaultValuesMap = Record<number, () => any>;
+const defaultValuesStorage: Record<string, DefaultValuesMap> = {};
+
 export function injectable<T extends { new (...args: any[]): {} }>(target: T) {
     return class extends target {
-        constructor(..._params: any) {
-            super();
+        constructor(...params: any[]) {
+            const defaults = defaultValuesStorage[target.name];
+            const paramsLength = Math.max(params.length, ...(defaults ? Object.keys(defaults).map(k => parseInt(k) + 1) : [0]));
+            const defaultedParams = Array.from({ length: paramsLength}).map((v, i) => params[i] || defaults[i]());
+            super(...defaultedParams);
+        }
+    };
+}
+
+export function inject(dep: Dep) {
+    return function (target: any, methodName: string | undefined, parameterIndex: number) {
+        if (methodName === undefined) {
+            const defaults = defaultValuesStorage[target.name] || {};
+            defaults[parameterIndex] = () => provide(dep);
+            defaultValuesStorage[target.name] = defaults;
         }
     };
 }
