@@ -2,17 +2,11 @@ import DefaultCounterRepository from "../repository/DefaultCounterRepository";
 import CounterRepository from "../repository/CounterRepository";
 
 export function injectable<T extends { new (...args: any[]): {} }>(target: T) {
-    const original = target;
-
-    const argumentless : any = function () {
-        return new original();
-    }
-
-    // copy prototype so intanceof operator still works
-    argumentless.prototype = original.prototype;
-
-    // return new constructor (will override original)
-    return argumentless;
+    return class extends target {
+        constructor(..._params: any) {
+            super();
+        }
+    };
 }
 
 export const DEPS = {
